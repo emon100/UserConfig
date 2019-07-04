@@ -59,9 +59,7 @@ if has('syntax') && has('eval')
   packadd! matchit
 endif
 
-" Ctrl + HJKL for arrow keys
 
-set wrap
 set autochdir
 "设置行号
 set nu
@@ -85,8 +83,10 @@ set softtabstop=4
 set ai
 "开启智能对齐
 set smartindent
-" 禁止折行
-set nowrap
+
+set wrap
+set linebreak
+
 set encoding=utf-8
 set fileencodings=utf-8,chinese,latin-1
 if has("win32")
@@ -97,6 +97,7 @@ endif
 "解决菜单乱码
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
+"
 "解决console输出乱码
 language messages zh_CN.utf-8
 set guifont=Consolas-with-Yahei:h14:b:cDEFAULT
@@ -136,6 +137,4 @@ function Do_OneKeyMake()
     "let cmd='cls & "'.oF.'" &pause'
     "silent execute 'normal :'
     "silent execute '!'.cmd
-    
 endfunction
-cd d:\source\

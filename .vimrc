@@ -77,5 +77,3 @@ function Do_OneKeyMake()
     "silent execute '!'.cmd
     
 endfunction
-cd d:/
-cd /source
