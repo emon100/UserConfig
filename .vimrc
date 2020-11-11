@@ -1,79 +1,252 @@
-"ÉèÖÃĞĞºÅ
-set nu
-" ¿ªÆôÊµÊ±ËÑË÷¹¦ÄÜ 
-set incsearch 
-" ËÑË÷Ê±´óĞ¡Ğ´²»Ãô¸Ğ 
-set ignorecase 
-" ¹Ø±Õ¼æÈİÄ£Ê½ 
-set nocompatible 
-" vim ×ÔÉíÃüÁîĞĞÄ£Ê½ÖÇÄÜ²¹È« 
-set wildmenu
-"½«ÖÆ±í·ûÀ©Õ¹Îª¿Õ¸ñ
-set expandtab
-"ÉèÖÃ±à¼­Ê±ÖÆ±í·ûÕ¼ÓÃ¿Õ¸ñÊı
-set tabstop=4
-"ÉèÖÃ¸ñÊ½»¯Ê±ÖÆ±í·ûÕ¼ÓÃ¿Õ¸ñÊı
-set shiftwidth=4
-"ÈÃ vim °ÑÁ¬ĞøÊıÁ¿µÄ¿Õ¸ñÊÓÎªÒ»¸öÖÆ±í·û
-set softtabstop=4
-"¿ªÆô×Ô¶¯Ëõ½ø
-set ai
-"¿ªÆôÖÇÄÜ¶ÔÆë
-set smartindent
-
-set wrap
 set encoding=utf-8
 set fileencodings=utf-8,chinese,latin-1
-if has("win32")
-set fileencoding=chinese
-else
-set fileencoding=utf-8
-endif
-"½â¾ö²Ëµ¥ÂÒÂë
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-"½â¾öconsleÊä³öÂÒÂë
-language messages zh_CN.utf-8
-set guifont=consola-with-Yahei:h14:b:cDEFAULT
+"if has("win32")
+"set fileencoding=chinese
+"else
+"set fileencoding=utf-8
+"endif
+""è§£å†³èœå•ä¹±ç 
+"source $VIMRUNTIME/delmenu.vim
+"source $VIMRUNTIME/menu.vim
+""è§£å†³consleè¾“å‡ºä¹±ç 
+"language messages zh_CN.utf-8
+
+syntax on
+"è®¾ç½®leaderé”®ä¸ºé€—å·
+let mapleader=","
+"è®¾ç½®ä¸»é¢˜
 colorscheme desert
+"è®¾ç½®Pmenué¢œè‰²
+highligh Pmenu ctermbg=3 guifg=lightblue guibg=darkblue
+"è®¾ç½®è¡Œå·
+set nu
+" å¼€å¯å®æ—¶æœç´¢åŠŸèƒ½
+set incsearch
+" æœç´¢æ—¶å¤§å°å†™ä¸æ•æ„Ÿ
+set ignorecase
+" å…³é—­å…¼å®¹æ¨¡å¼
+set nocompatible
+set backspace=indent,eol,start
+" vim è‡ªèº«å‘½ä»¤è¡Œæ¨¡å¼æ™ºèƒ½è¡¥å…¨
+set wildmenu
+"å°†åˆ¶è¡¨ç¬¦æ‰©å±•ä¸ºç©ºæ ¼
+set expandtab
+"makefileå…¼å®¹
+autocmd FileType make setlocal noexpandtab
+"è®¾ç½®ç¼–è¾‘æ—¶åˆ¶è¡¨ç¬¦å ç”¨ç©ºæ ¼æ•°
+set tabstop=4
+"è®¾ç½®æ ¼å¼åŒ–æ—¶åˆ¶è¡¨ç¬¦å ç”¨ç©ºæ ¼æ•°
+set shiftwidth=4
+"è®© vim æŠŠè¿ç»­æ•°é‡çš„ç©ºæ ¼è§†ä¸ºä¸€ä¸ªåˆ¶è¡¨ç¬¦
+set softtabstop=4
+"å¼€å¯è‡ªåŠ¨ç¼©è¿›
+set ai
+"å¼€å¯æ™ºèƒ½å¯¹é½
+set smartindent
+"è®¾ç½®æŠ˜è¡Œ
+set wrap
+"è®¾ç½®å­—ä½“
+set guifont=Consolas-with-Yahei:h14:b:cANSI
 
+noremap <silent><f5> :AsyncTask file-run<cr>
+noremap <silent><f6> :w<cr>:AsyncTask file-build<cr>
 
+autocmd BufEnter * if expand("%:p:h") !~ '^/tmp' | silent! lcd %:p:h | endif
 
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
 
-nmap<C-F5> :w<CR>:call Do_OneKeyMake()<CR>
-imap<C-F5> <Esc>:w<CR>:call Do_OneKeyMake()<CR>
-nmap<F5> :call Do_OneKeyMake()<CR>
-imap<F5> <Esc>:call Do_OneKeyMake()<CR>
-function Do_OneKeyMake()
-    let sF=expand('%:p')
-    let oF=expand('%:p:h').'\ok.exe'
-    let fE=expand('%:e')
-    "echo oF
-    "echo filereadable(sF)
-    if fE!='cpp' && fE!='c'
-        echohl WarningMsg | echo 'ÎÄ¼şÀ©Õ¹Ãû±ØĞëÊÇ cpp »òÕß c' | echohl None
-        return
-    endif
+" Make sure you use single quotes
+"coc.nvim
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'octol/vim-cpp-enhanced-highlight'
 
-    if filereadable(oF)
-        if delete(oF)
-            echohl WarningMsg | echo 'ÎŞ·¨É¾³ıÖ®Ç°Éú³ÉµÄ¿ÉÖ´ĞĞÎÄ¼ş£¬¿ÉÄÜÊÇÃ»ÓĞÈ¨ÏŞ' | echohl None
-            return
-        endif
-    endif
-    
-    let cmd='cls & g++ -static -Wall "'.sF.'" -o "'.oF.'" && "'.oF.'" &pause'
-    silent execute 'normal :'
-    silent execute '!'.cmd
-    
-    if !filereadable(oF)
-        echohl WarningMsg | echo 'Ã»ÓĞÉú³ÉĞÂµÄ¿ÉÖ´ĞĞÎÄ¼ş£¬¿ÉÄÜ±àÒëÊ§°Ü£¬»òÕßÃ»ÓĞÈ¨ÏŞ' | echohl None
-        return
-    endif
-    "±¾À´°Ñ±àÒëºÍÔËĞĞ·Åµ½²»Í¬´°¿ÚµÄ£¬µ«ÊÇÄÇÑù¿ÉÄÜ»áÓĞ¶àÓàµÄ²Ù×÷
-    "ÏÂÃæµÄÃüÁîÓÃÓÚ²úÉúÖ´ĞĞÊ±µÄ´°¿Ú£¬ÏÖÒÑ×¢ÊÍµô
-    "let cmd='cls & "'.oF.'" &pause'
-    "silent execute 'normal :'
-    "silent execute '!'.cmd
-    
+Plug 'vim-airline/vim-airline'
+
+Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asyncrun.vim'
+" Initialize plugin system
+call plug#end()
+
+" AsyncTask plugin config
+
+let g:asyncrun_open = 6
+let g:asynctasks_term_pos = 'external'
+
+" CoC Configs
+
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=20
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+    " Recently vim can merge signcolumn and number column into one
+    set signcolumn=number
+else
+    set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+" Formatting code in the buffer.
+xmap <leader>=  <Plug>(coc-format)
+nmap <leader>=  <Plug>(coc-format)
+
+augroup mygroup
+    autocmd!
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings using CoCList:
+" Show all diagnostics.
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+
+" Airline config
+" delete mode bar
+set noshowmode
+
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#coc#enabled = 1
+
+"default let g:airline_section_z = '%3p%% %#__accent_bold#%{g:airline_symbols.linenr}%4l%#__restore__#%#__accent_bold#/%L%{g:airline_symbols.maxlinenr}%#__restore__#:%3v'
+let g:airline_section_z = '%l/%L'
+let g:airline#extensions#default#section_truncate_width = {
+      \ 'b': 79,
+      \ 'x': 60,
+      \ 'y': 45,
+      \ 'z': 40,
+      \ 'warning': 80,
+      \ 'error': 80,
+      \ }
+
+"tabs
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#fnametruncate = 16
+let g:airline#extensions#tabline#fnamecollapse = 2
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <silent><m--> <Plug>AirlineSelectPrevTab
+nmap <silent><m-=> <Plug>AirlineSelectNextTab
