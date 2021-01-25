@@ -1,15 +1,5 @@
 set encoding=utf-8
 set fileencodings=utf-8,chinese,latin-1
-"if has("win32")
-"set fileencoding=chinese
-"else
-"set fileencoding=utf-8
-"endif
-""解决菜单乱码
-"source $VIMRUNTIME/delmenu.vim
-"source $VIMRUNTIME/menu.vim
-""解决consle输出乱码
-"language messages zh_CN.utf-8
 
 syntax on
 "设置leader键为逗号
@@ -47,6 +37,15 @@ set smartindent
 set wrap
 "设置字体
 set guifont=Consolas-with-Yahei:h14:b:cANSI
+"试着开启鼠标
+set mouse=a
+"设置持久化保存撤回文件
+set undofile
+if has("win32")
+    set undodir=D:\\develop\\tmp
+else
+    set undodir=/tmp
+endif
 
 noremap <silent><f5> :AsyncTask file-run<cr>
 noremap <silent><f6> :w<cr>:AsyncTask file-build<cr>
@@ -57,7 +56,6 @@ autocmd BufEnter * if expand("%:p:h") !~ '^/tmp' | silent! lcd %:p:h | endif
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
-
 " Make sure you use single quotes
 "coc.nvim
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -67,6 +65,13 @@ Plug 'vim-airline/vim-airline'
 
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
+
+"中文文档
+Plug 'yianwillis/vimcdoc'
+"对齐插件，vim-markdown依赖此项
+Plug 'godlygeek/tabular'
+"vim-markdown
+Plug 'plasticboy/vim-markdown'
 " Initialize plugin system
 call plug#end()
 
@@ -250,3 +255,4 @@ let g:airline#extensions#tabline#fnamecollapse = 2
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 nmap <silent><m--> <Plug>AirlineSelectPrevTab
 nmap <silent><m-=> <Plug>AirlineSelectNextTab
+nmap <silent><m-BS> :bdelete<CR>
