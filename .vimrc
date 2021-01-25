@@ -72,6 +72,8 @@ Plug 'yianwillis/vimcdoc'
 Plug 'godlygeek/tabular'
 "vim-markdown
 Plug 'plasticboy/vim-markdown'
+
+Plug 'godlygeek/csapprox'
 " Initialize plugin system
 call plug#end()
 
