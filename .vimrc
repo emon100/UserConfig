@@ -2,8 +2,8 @@ set encoding=utf-8
 set fileencodings=utf-8,chinese,latin-1
 
 syntax on
-"设置leader键为逗号
-let mapleader=","
+"设置leader键为空格
+let mapleader = "\<space>"
 "设置主题
 colorscheme desert
 "设置Pmenu颜色
@@ -47,6 +47,8 @@ else
     set undodir=/tmp
 endif
 
+map <C-c> <Esc><Esc>
+
 noremap <silent><f5> :AsyncTask file-run<cr>
 noremap <silent><f6> :w<cr>:AsyncTask file-build<cr>
 
@@ -72,11 +74,29 @@ Plug 'yianwillis/vimcdoc'
 Plug 'godlygeek/tabular'
 "vim-markdown
 Plug 'plasticboy/vim-markdown'
-
+" 终端下的主题颜色修复
 Plug 'godlygeek/csapprox'
+
+Plug 'mhinz/vim-startify'
+
+Plug 'kien/ctrlp.vim'
+
+" netrw replacement
+Plug 'preservim/nerdtree'
+
+Plug 'easymotion/vim-easymotion'
 " Initialize plugin system
 call plug#end()
 
+nnoremap <silent> <expr> - g:NERDTree.IsOpen() ? "\:NERDTreeClose<CR>" : bufexists(expand('%')) ? "\:NERDTreeFind<CR>" : "\:NERDTree<CR>"
+
+let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_working_path_mode = 'cra'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  'node_modules\|\v[\/]\.(git|hg|svn)$',
+    \ 'file': '\v\.(exe|so|dll)$',
+    \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+    \ }
 " AsyncTask plugin config
 
 let g:asyncrun_open = 6
@@ -96,12 +116,7 @@ set shortmess+=c
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-    " Recently vim can merge signcolumn and number column into one
-    set signcolumn=number
-else
-    set signcolumn=yes
-endif
+set signcolumn=number
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -138,6 +153,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
