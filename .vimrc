@@ -12,8 +12,9 @@ highligh Pmenu ctermbg=3 guifg=lightblue guibg=darkblue
 set nu
 " 开启实时搜索功能
 set incsearch
-" 搜索时大小写不敏感
+" 搜索时大小写
 set ignorecase
+set smartcase
 " 关闭兼容模式
 set nocompatible
 set backspace=indent,eol,start
@@ -36,7 +37,8 @@ set smartindent
 "设置折行
 set wrap
 "设置字体
-set guifont=Consolas-with-Yahei:h14:b:cANSI
+" set guifont=adobe-source-han-sans-cn-fonts:h17:b:cANSI
+set guifont=DejaVu\ Sans\ Mono\ 16
 "试着开启鼠标
 set mouse=a
 "设置持久化保存撤回文件
@@ -46,6 +48,50 @@ if has("win32")
 else
     set undodir=/tmp
 endif
+
+"解决 终端 Meta key
+function! Terminal_MetaMode(mode)
+    set ttimeout
+    if $TMUX != ''
+        set ttimeoutlen=30
+    elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+        set ttimeoutlen=80
+    endif
+    if has('nvim') || has('gui_running')
+        return
+    endif
+    function! s:metacode(mode, key)
+        if a:mode == 0
+            exec "set <M-".a:key.">=\e".a:key
+        else
+            exec "set <M-".a:key.">=\e]{0}".a:key."~"
+        endif
+    endfunc
+    for i in range(10)
+        call s:metacode(a:mode, nr2char(char2nr('0') + i))
+    endfor
+    for i in range(26)
+        call s:metacode(a:mode, nr2char(char2nr('a') + i))
+        call s:metacode(a:mode, nr2char(char2nr('A') + i))
+    endfor
+    if a:mode != 0
+        for c in [',', '.', '/', ';', '[', ']', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    else
+        for c in [',', '.', '/', ';', '{', '}']
+            call s:metacode(a:mode, c)
+        endfor
+        for c in ['?', ':', '-', '_']
+            call s:metacode(a:mode, c)
+        endfor
+    endif
+endfunc
+
+command! -nargs=0 -bang VimMetaInit call Terminal_MetaMode(<bang>0)
 
 map <C-c> <Esc><Esc>
 
@@ -59,6 +105,9 @@ autocmd BufEnter * if expand("%:p:h") !~ '^/tmp' | silent! lcd %:p:h | endif
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 " Make sure you use single quotes
+" 终端下的主题颜色修复
+Plug 'godlygeek/csapprox'
+
 "coc.nvim
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'octol/vim-cpp-enhanced-highlight'
@@ -71,15 +120,14 @@ Plug 'skywind3000/asyncrun.vim'
 "中文文档
 Plug 'yianwillis/vimcdoc'
 "对齐插件，vim-markdown依赖此项
-Plug 'godlygeek/tabular'
+"Plug 'godlygeek/tabular'
 "vim-markdown
-Plug 'plasticboy/vim-markdown'
-" 终端下的主题颜色修复
-Plug 'godlygeek/csapprox'
+"Plug 'plasticboy/vim-markdown'
 
 Plug 'mhinz/vim-startify'
 
-Plug 'kien/ctrlp.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " netrw replacement
 Plug 'preservim/nerdtree'
@@ -90,13 +138,13 @@ call plug#end()
 
 nnoremap <silent> <expr> - g:NERDTree.IsOpen() ? "\:NERDTreeClose<CR>" : bufexists(expand('%')) ? "\:NERDTreeFind<CR>" : "\:NERDTree<CR>"
 
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_working_path_mode = 'cra'
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  'node_modules\|\v[\/]\.(git|hg|svn)$',
-    \ 'file': '\v\.(exe|so|dll)$',
-    \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-    \ }
+" let g:ctrlp_cmd = 'CtrlPMixed'
+" let g:ctrlp_working_path_mode = 'cra'
+" let g:ctrlp_custom_ignore = {
+"     \ 'dir':  'dist|node_modules\|\v[\/]\.(git|hg|svn)$',
+"     \ 'file': '\v\.(exe|so|dll)$',
+"     \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+"     \ }
 " AsyncTask plugin config
 
 let g:asyncrun_open = 6
@@ -271,6 +319,9 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#fnametruncate = 16
 let g:airline#extensions#tabline#fnamecollapse = 2
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-nmap <silent><m--> <Plug>AirlineSelectPrevTab
-nmap <silent><m-=> <Plug>AirlineSelectNextTab
-nmap <silent><m-BS> :bdelete<CR>
+
+
+nmap <silent><ESC>- <Plug>AirlineSelectPrevTab
+nmap <silent><ESC>= <Plug>AirlineSelectNextTab
+nmap <silent><ESC><BS> :bdelete<CR>
+nnoremap <silent> <C-p> :FZF<CR>

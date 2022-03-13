@@ -3,10 +3,8 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/emon100/.oh-my-zsh"
-
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
+export GOPROXY=https://goproxy.io,direct
+export GOPATH=~/go
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -74,13 +72,14 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git sudo fzf) 
+plugins=(git sudo fzf)
 
+source ~/.bashrc
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-PROMPT='%{$fg[cyan]%}%2c%{$reset_color%}$(git_prompt_info) %# '  
+PROMPT='%{$fg[cyan]%}%2c%{$reset_color%}$(git_prompt_info) %# '
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
